@@ -1,10 +1,13 @@
-const {faker} = require("@faker-js/faker")
-const {PrismaClient} = require('@prisma/client')
+var express = require('express');
+var router = express.Router();
+var {faker} = require("@faker-js/faker")
+var {PrismaClient} = require('@prisma/client')
 
-const prisma = new PrismaClient();
+var prisma = new PrismaClient();
 
-const bools = [true, false];
-const roles = ['AUTHOR', 'ADMIN'];
+
+var bools = [true, false];
+var roles = ['AUTHOR', 'ADMIN'];
 
 function getRandomName() {
     return faker.random.word().toUpperCase()
@@ -14,7 +17,7 @@ function randomNumber(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
 }
 
-async function main() {
+async function seed() {
     await prisma.utilisateur.deleteMany();
     await prisma.categorie.deleteMany();
     await prisma.commentaire.deleteMany();
@@ -30,8 +33,8 @@ async function main() {
         },
     });
     // 10 utilisteurs author
-    for (let i = 1; i <= 10; i++) {
-        const user = {
+    for (var i = 1; i <= 10; i++) {
+        var user = {
             nom: faker.name.findName().toUpperCase() + ' ' + faker.name.findName(),
             email: faker.internet.email(),
             password: faker.random.alphaNumeric(10),
@@ -42,18 +45,18 @@ async function main() {
         })
     }
     // 10 categories
-    for (let i = 1; i <= 10; i++) {
-        const cat = {nom: getRandomName()};
+    for (var i = 1; i <= 10; i++) {
+        var cat = {nom: getRandomName()};
 
-        const savedCat = await prisma.categorie.create({
+        var savedCat = await prisma.categorie.create({
             data: cat
         });
 
     }
 
     // 100 articles
-    for (let i = 1; i <= 100; i++) {
-        const article = {
+    for (var i = 1; i <= 100; i++) {
+        var article = {
             titre: faker.random.words(4), contenu: faker.random.words(3), image: null,
             authorId: randomNumber(2, 11),
             published: randomNumber(0, 1) === 1,
@@ -66,14 +69,14 @@ async function main() {
 
     // 0 à 20 commentaires pour chaque article
 
-    for (let i = 1; i < 100; i++) {
-        const commentaire = {
+    for (var i = 1; i < 100; i++) {
+        var commentaire = {
             email: faker.internet.email(), contenu: faker.random.words(10), articleId: i
         };
-        const randomNumberOfComments = randomNumber(0, 20)
+        var randomNumberOfComments = randomNumber(0, 20)
 
 
-        for (let j = 0; j <= randomNumberOfComments; j++) {
+        for (var j = 0; j <= randomNumberOfComments; j++) {
             await prisma.commentaire.create({
                 data: commentaire
             });
@@ -83,11 +86,9 @@ async function main() {
 
 }
 
-main()
-    .catch((e) => {
-        console.error(e)
-        process.exit(1)
-    })
-    .finally(async () => {
-        await prisma.$disconnect()
-    })
+router.get('/', async function (req, res, next) {
+    await seed();
+    res.send('SEED OK');
+});
+
+module.exports = router;
