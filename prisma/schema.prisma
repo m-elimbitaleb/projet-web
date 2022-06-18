@@ -28,6 +28,8 @@ model Article {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   published Boolean @default(false)
+  authorId Int
+  categoryId Int?
 }
 
 model Categorie {
@@ -40,5 +42,6 @@ model Commentaire {
   id Int @id @default(autoincrement())
   contenu String @db.VarChar(1024)
   email String
+  articleId Int
   createdAt DateTime @default(now())
 }
