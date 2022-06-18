@@ -11,24 +11,34 @@ datasource db {
 }
 
 
+model Utilisateur {
+  id Int @id @default(autoincrement())
+  nom String
+  email String
+  password String
+  role String
+  dateCreation DateTime @default(now())
+}
+
 model Article {
   id Int @id @default(autoincrement())
-  nom String @unique
-  prix Int
-  quantite Int? @default(0)
-  dateCreation DateTime @default(now())
-  categoryId Int?
+  titre String
+  contenu String
+  image Bytes
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean @default(false)
 }
 
 model Categorie {
   id Int @id @default(autoincrement())
   nom String @unique
-  dateCreation DateTime @default(now())
+  createdAt DateTime @default(now())
 }
 
 model Commentaire {
   id Int @id @default(autoincrement())
-  commentaire String @unique
-  userId Int
-  dateCreation DateTime @default(now())
+  contenu String @db.VarChar(1024)
+  email String
+  createdAt DateTime @default(now())
 }
