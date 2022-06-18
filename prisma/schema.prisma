@@ -23,8 +23,8 @@ model Utilisateur {
 model Article {
   id Int @id @default(autoincrement())
   titre String
-  contenu String
-  image Bytes
+  contenu String @db.VarChar(1024)
+  image Bytes?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   published Boolean @default(false)
