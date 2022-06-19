@@ -29,11 +29,11 @@ router.post('/', [userAuthenticated, userIsAdmin], async function (req, res, nex
 });
 
 router.get('/', [userAuthenticated, userIsAdmin], async function (req, res, next) {
-    const users = await prisma.product.findMany().map(it => {
+    const users = await prisma.utilisateur.findMany();
+    return res.status(200).send(users.map(it => {
         it.password = null;
         return it;
-    });
-    return res.status(200).send(users);
+    }));
 });
 
 module.exports = router;

@@ -6,7 +6,7 @@ var {PrismaClient} = require('@prisma/client')
 var prisma = new PrismaClient();
 
 const userAuthenticated = (req, res, next) => {
-    let header = req.headers["Authorization"];
+    let header = req.headers["authorization"];
 
     if (!header || header.split(" ").length !== 2) {
         return res.status(403).send({

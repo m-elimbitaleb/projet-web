@@ -17,7 +17,7 @@ router.post('/token', async function (req, res, next) {
 
     let user;
     try {
-        user = await prisma.utilisateur.find({
+        user = await prisma.utilisateur.findUnique({
             where: {
                 email: req.body.email
             }
