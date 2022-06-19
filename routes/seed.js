@@ -18,10 +18,16 @@ function randomNumber(min, max) {
 }
 
 async function seed() {
+
     await prisma.utilisateur.deleteMany();
     await prisma.categorie.deleteMany();
     await prisma.commentaire.deleteMany();
     await prisma.article.deleteMany();
+
+    await prisma.$executeRaw`ALTER table Utilisateur AUTO_INCREMENT = 1`;
+    await prisma.$executeRaw`ALTER table Categorie AUTO_INCREMENT = 1`;
+    await prisma.$executeRaw`ALTER table Commentaire AUTO_INCREMENT = 1`;
+    await prisma.$executeRaw`ALTER table Article AUTO_INCREMENT = 1`;
 
     // 1 Admin
     const adminEmail = "admin@dwm.com";
@@ -62,7 +68,7 @@ async function seed() {
             titre: faker.random.words(4), contenu: faker.random.words(3), image: null,
             authorId: randomNumber(2, 11),
             published: randomNumber(0, 1) === 1,
-            categoryId: randomNumber(1, 4)
+            categoryId: randomNumber(1, 5)
         };
         await prisma.article.create({
             data: article

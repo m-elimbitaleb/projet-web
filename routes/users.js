@@ -36,5 +36,53 @@ router.get('/', [userAuthenticated, userIsAdmin], async function (req, res, next
     }));
 });
 
+router.get('/:id', [userAuthenticated, userIsAdmin], async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const user = await prisma.utilisateur.findUnique({
+            where: {
+                id: Number(id),
+            }
+        })
+        return res.status(200).send({...user, password: null});
+    } catch (error) {
+        next(error)
+    }
+});
+
+router.delete('/:id', [userAuthenticated, userIsAdmin], async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const user = await prisma.utilisateur.delete({
+            where: {
+                id: Number(id)
+            }
+        })
+        return res.status(200).send({...user, password: null})
+    } catch (error) {
+        next(error)
+    }
+});
+
+router.patch('/', [userAuthenticated, userIsAdmin], async (req, res, next) => {
+    try {
+        let {
+            nom, email, role
+        } = req.body
+        const user = await prisma.utilisateur.update({
+            where: {
+                id: Number(id)
+            },
+            data: {
+                nom, email, role
+            }
+        })
+        return res.status(200).send({...user, password: null})
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+});
+
 module.exports = router;
 

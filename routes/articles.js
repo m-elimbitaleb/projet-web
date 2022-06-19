@@ -12,7 +12,12 @@ const {userAuthenticated} = require("../middlewares/auth/auth-middleware");
 
 router.get('/', [userAuthenticated], async function (req, res, next) {
     try {
-        const articles = await prisma.article.findMany()
+        const take = req.query.take ? Number(req.query.take) : 100;
+        const skip = req.query.skip ? Number(req.query.skip) : 0;
+        const articles = await prisma.article.findMany({
+            take, skip,
+            orderBy: [{createdAt: 'desc'}]
+        })
         return res.status(200).send(articles);
     } catch (error) {
         next(error)
