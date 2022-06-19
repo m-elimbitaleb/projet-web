@@ -5,9 +5,9 @@ var {PrismaClient} = require('@prisma/client')
 
 var prisma = new PrismaClient();
 
+var bcrypt = require("bcryptjs");
 
-var bools = [true, false];
-var roles = ['AUTHOR', 'ADMIN'];
+const roles = ['AUTHOR', 'ADMIN'];
 
 function getRandomName() {
     return faker.random.word().toUpperCase()
@@ -24,20 +24,22 @@ async function seed() {
     await prisma.article.deleteMany();
 
     // 1 Admin
+    const adminEmail = "admin@dwm.com";
     await prisma.utilisateur.create({
         data: {
             nom: faker.name.findName().toUpperCase() + ' ' + faker.name.findName(),
-            email: faker.internet.email(),
-            password: faker.random.alphaNumeric(10),
+            email: adminEmail,
+            password: bcrypt.hashSync(adminEmail),
             role: roles[1]
         },
     });
     // 10 utilisteurs author
     for (var i = 1; i <= 10; i++) {
+        const userEmail = faker.internet.email();
         var user = {
             nom: faker.name.findName().toUpperCase() + ' ' + faker.name.findName(),
-            email: faker.internet.email(),
-            password: faker.random.alphaNumeric(10),
+            email: userEmail,
+            password: bcrypt.hashSync(userEmail),
             role: roles[0]
         }
         await prisma.utilisateur.create({

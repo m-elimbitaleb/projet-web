@@ -1,9 +1,9 @@
+import {userAuthenticated} from "../middlewares/auth/auth-middleware";
+
 var express = require('express');
 var router = express.Router();
 
-
-/* GET users listing. */
-router.get('/', async function (req, res, next) {
+router.get('/', [userAuthenticated], async function (req, res, next) {
     res.send('categories');
 });
 

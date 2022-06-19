@@ -1,3 +1,10 @@
+import {
+    userIsAuthor,
+    userIsAuthorOrAdmin,
+    userIsOwnerOfArticle, userIsOwnerOrAdmin,
+    userAuthenticated
+} from "../middlewares/auth/auth-middleware";
+
 var express = require('express');
 var router = express.Router();
 
@@ -5,116 +12,74 @@ const {PrismaClient} = require('@prisma/client')
 
 const prisma = new PrismaClient()
 
-router.get('/', async function (req, res, next) {
+router.get('/', [userAuthenticated], async function (req, res, next) {
     try {
-        const products = await prisma.product.findMany({
-            include: {category: true},
-        })
-        return res.json({
-            statusCode: 200,
-            status: true,
-            message: 'Successfully fetched products',
-            data: products
-        })
+        const articles = await prisma.article.findMany()
+        return res.status(200).send(articles);
     } catch (error) {
         next(error)
     }
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', [userAuthenticated], async (req, res, next) => {
     try {
         const id = req.params.id;
-        const product = await prisma.product.findUnique({
+        const article = await prisma.article.findUnique({
             where: {
                 id: Number(id),
-            },
-            include: {category: true}
+            }
         })
-        return res.json({
-            statusCode: 200,
-            status: true,
-            message: 'Successfully fetched product',
-            data: product
-        })
+        return res.status(200).send(article);
     } catch (error) {
         next(error)
     }
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', [userAuthenticated, userIsAuthor], async (req, res, next) => {
     try {
-        req.body.price = parseInt(req.body.price);
-        req.body.categoryId = parseInt(req.body.categoryId);
-        let {
-            name,
-            price,
-            categoryId
-        } = req.body
-        const product = await prisma.product.create({
+        req.body.authorId = parseInt(req.body.authorId);
+        req.body.categoryId = req.body.categoryId ? parseInt(req.body.categoryId) : null;
+        let {titre, contenu, image, published, authorId, categoryId} = req.body
+        const article = await prisma.article.create({
             data: {
-                name,
-                price,
-                categoryId
-            },
-            include: {category: true}
+                titre, contenu, image, published, authorId, categoryId
+            }
         })
-        return res.json({
-            statusCode: 200,
-            status: true,
-            message: 'Successfully created product',
-            data: product
-        })
+        return res.status(200).send(article)
     } catch (error) {
         console.log(error)
         next(error)
     }
 });
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', [userAuthenticated, userIsOwnerOrAdmin], async (req, res, next) => {
     try {
         const id = req.params.id;
-        const product = await prisma.product.delete({
+        const article = await prisma.article.delete({
             where: {
                 id: Number(id)
-            },
-            include: {category: true}
+            }
         })
-        return res.json({
-            statusCode: 200,
-            status: true,
-            message: 'Successfully deleted product',
-            data: product
-        })
+        return res.status(200).send(article)
     } catch (error) {
         next(error)
     }
 });
 
-router.patch('/', async (req, res, next) => {
+router.patch('/', [userAuthenticated, userIsAuthor, userIsOwnerOfArticle], async (req, res, next) => {
     try {
         let {
-            id,
-            name,
-            price,
-            categoryId
+            id, titre, contenu, image, published, categoryId
         } = req.body
-        const product = await prisma.product.update({
+        const article = await prisma.article.update({
             where: {
-                id: Number(req.params.id)
+                id: Number(id)
             },
             data: {
-                name,
-                price,
-                categoryId
-            },
-            include: {category: true}
+                titre, contenu, image, published, categoryId
+            }
         })
-        return res.json({
-            statusCode: 200,
-            status: true,
-            message: 'Successfully updated product',
-            data: product
-        })
+        return res.status(200).send(article)
     } catch (error) {
         console.log(error)
         next(error)
