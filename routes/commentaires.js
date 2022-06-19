@@ -1,5 +1,5 @@
-import {userAuthenticated} from "../middlewares/auth/auth-middleware";
 
+const {userAuthenticated} = require("../middlewares/auth/auth-middleware");
 var express = require('express');
 var router = express.Router();
 

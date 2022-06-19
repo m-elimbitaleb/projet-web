@@ -27,7 +27,7 @@ async function seed() {
     const adminEmail = "admin@dwm.com";
     await prisma.utilisateur.create({
         data: {
-            nom: faker.name.findName().toUpperCase() + ' ' + faker.name.findName(),
+            nom: "DWM Admin",
             email: adminEmail,
             password: bcrypt.hashSync(adminEmail),
             role: roles[1]
@@ -37,7 +37,7 @@ async function seed() {
     for (var i = 1; i <= 10; i++) {
         const userEmail = faker.internet.email();
         var user = {
-            nom: faker.name.findName().toUpperCase() + ' ' + faker.name.findName(),
+            nom: faker.name.findName().toUpperCase(),
             email: userEmail,
             password: bcrypt.hashSync(userEmail),
             role: roles[0]

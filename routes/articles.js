@@ -1,16 +1,14 @@
-import {
-    userIsAuthor,
-    userIsAuthorOrAdmin,
-    userIsOwnerOfArticle, userIsOwnerOrAdmin,
-    userAuthenticated
-} from "../middlewares/auth/auth-middleware";
-
 var express = require('express');
 var router = express.Router();
 
 const {PrismaClient} = require('@prisma/client')
 
 const prisma = new PrismaClient()
+
+const {userIsOwnerOfArticle} = require("../middlewares/auth/auth-middleware");
+const {userIsAuthor} = require("../middlewares/auth/auth-middleware");
+const {userIsOwnerOrAdmin} = require("../middlewares/auth/auth-middleware");
+const {userAuthenticated} = require("../middlewares/auth/auth-middleware");
 
 router.get('/', [userAuthenticated], async function (req, res, next) {
     try {

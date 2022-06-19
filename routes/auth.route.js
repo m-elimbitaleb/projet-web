@@ -1,9 +1,11 @@
-import {jwtExpringDuration, jwtSecret} from "../utils/auth-utils";
 
 var express = require('express');
 const jwt = require("jsonwebtoken");
 
 var bcrypt = require("bcryptjs");
+
+const {jwtSecret} = require("../utils/auth-utils");
+const {jwtExpringDuration} = require("../utils/auth-utils");
 
 var router = express.Router();
 
@@ -15,7 +17,7 @@ router.post('/token', async function (req, res, next) {
 
     let user;
     try {
-        user = await prisma.utilisateur.findUnique({
+        user = await prisma.utilisateur.find({
             where: {
                 email: req.body.email
             }

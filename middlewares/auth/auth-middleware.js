@@ -1,6 +1,6 @@
-import {jwtSecret} from "../../utils/auth-utils";
 
 const jwt = require("jsonwebtoken");
+const {jwtSecret} = require("../../utils/auth-utils");
 var {PrismaClient} = require('@prisma/client')
 
 var prisma = new PrismaClient();
