@@ -29,7 +29,13 @@ router.post('/', [userAuthenticated, userIsAdmin], async function (req, res, nex
 });
 
 router.get('/', [userAuthenticated, userIsAdmin], async function (req, res, next) {
-    const users = await prisma.utilisateur.findMany();
+    const take = req.query.take ? Number(req.query.take) : 100;
+    const skip = req.query.skip ? Number(req.query.skip) : 0;
+    const users = await prisma.utilisateur.findMany({
+        take, skip,
+        orderBy: [{createdAt: 'desc'}]
+    })
+
     return res.status(200).send(users.map(it => {
         it.password = null;
         return it;

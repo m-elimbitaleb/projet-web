@@ -1,13 +1,12 @@
 {
-  "name": "projet-web",
-  "version": "0.0.1",
-  "private": true,
+  "name": "projet-web-backend",
+  "version": "1.0.0",
   "prisma": {
     "seed": "node ./seeds/seed.js"
   },
   "scripts": {
-    "start": "node ./bin/www",
-    "seed": "npx prisma db seed"
+    "start_backend": "node ./bin/www",
+    "start_frontend": "cd ./frontend/blog && NODE_ENV='development' node ./server.js"
   },
   "dependencies": {
     "@prisma/client": "^3.15.2",

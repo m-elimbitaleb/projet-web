@@ -17,14 +17,14 @@ router.get('/', [userAuthenticated], async function (req, res, next) {
             take, skip,
             orderBy: [{createdAt: 'desc'}]
         })
-        const groupBy = await prisma.categorie.groupBy({
+        const groupBy = await prisma.article.groupBy({
             by: ['categoryId'],
             _count: {
                 categoryId: true,
             }
         })
         return res.status(200).send(categories.map(it => {
-            it.categorieCount = groupBy.find(c => c.categoryId === it.id)?._count?.categoryId || 0;
+            it.articleCount = groupBy.find(c => c.categoryId === it.id)?._count?.categoryId || 0;
             return it;
         }));
     } catch (error) {

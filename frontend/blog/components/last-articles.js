@@ -1,9 +1,8 @@
 import {useEffect, useState} from "react";
 import {Card, Space, Tag} from "antd";
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcyLCJlbWFpbCI6ImFkbWluQGR3bS5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE2NTU2NTcxNzMsImV4cCI6MTY1NTc0MzU3M30.uudqpHQXCexG478SPFle-KUvLFG5VHGJXqrAaEBKNvI";
-
 export default function LastArticles() {
+
     const [data, setData] = useState(null)
     const [isLoading, setLoading] = useState(false)
 
@@ -12,6 +11,7 @@ export default function LastArticles() {
 
     useEffect(() => {
         setLoading(true)
+        const token = localStorage.getItem('token')
         fetch(`/api/articles?take=${take}&skip=${skip}`, {
             headers: new Headers({
                 'Authorization': 'Bearer ' + token,

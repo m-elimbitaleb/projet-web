@@ -1,4 +1,3 @@
-
 var express = require('express');
 const jwt = require("jsonwebtoken");
 
@@ -12,6 +11,10 @@ var router = express.Router();
 const {PrismaClient} = require('@prisma/client')
 
 const prisma = new PrismaClient()
+
+router.post('/hash-password', async function (req, res, next) {
+    res.status(200).send({bcrypt_hashed_password: bcrypt.hashSync(req.body.password)});
+});
 
 router.post('/token', async function (req, res, next) {
 
